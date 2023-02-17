@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
+import { UsersModule } from './modules/users/users.module';
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ dotenv.config();
       autoLoadEntities: true,
       synchronize: true,
     }),
+    UsersModule,
   ],
   controllers: [],
   providers: [],
