@@ -5,8 +5,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './user.entity';
 import * as bcrypt from 'bcryptjs';
-import { UserResponse } from './users.type';
-import { UserTypes } from 'src/types/userTypes';
+import { UserResponse } from '../../types/users.type';
+import { UserTypes } from '../../types/userTypes.enum';
 
 @Injectable()
 export class UsersService {

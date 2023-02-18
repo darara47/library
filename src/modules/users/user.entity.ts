@@ -1,4 +1,4 @@
-import { UserTypes } from '../../types/userTypes';
+import { UserTypes } from '../../types/userTypes.enum';
 import {
   Column,
   CreateDateColumn,
