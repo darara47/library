@@ -1,16 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsEmail,
-  IsEnum,
+  IsDateString,
   IsNotEmpty,
   IsOptional,
   IsString,
 } from 'class-validator';
-import { UserTypes } from '../../../types/userTypes.enum';
 
-export class CreateUserDto {
+export class CreateAuthorDto {
   @ApiProperty({
-    example: 'Jane',
+    example: 'John',
   })
   @IsString()
   @IsNotEmpty()
@@ -24,30 +22,28 @@ export class CreateUserDto {
   readonly lastName: string;
 
   @ApiProperty({
-    example: 'jane.doe@test.com',
-  })
-  @IsString()
-  @IsEmail()
-  @IsNotEmpty()
-  readonly email: string;
-
-  @ApiProperty({
-    example: 'Password!123',
+    example: 'A long, long time ago ..',
   })
   @IsString()
   @IsNotEmpty()
-  readonly password: string;
+  readonly biography: string;
 
   @ApiProperty({
-    example: UserTypes.reader,
+    example: '',
   })
-  @IsEnum(UserTypes)
-  readonly type: UserTypes;
+  @IsDateString()
+  readonly birthDate: Date;
 
   @ApiProperty({
     example: '',
   })
   @IsOptional()
+  @IsDateString()
+  readonly deathDate: Date;
+
+  @ApiProperty({
+    example: '',
+  })
   @IsString()
-  readonly createdBy?: string;
+  readonly createdBy: string;
 }

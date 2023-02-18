@@ -1,4 +1,4 @@
-import { UserTypes } from 'src/types/userTypes';
+import { UserTypes } from './userTypes.enum';
 
 export type UserResponse = {
   firstName: string;
