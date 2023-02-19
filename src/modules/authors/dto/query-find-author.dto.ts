@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer';
 import {
-  IsDateString,
+  IsBoolean,
   IsObject,
   IsOptional,
   IsString,
@@ -13,13 +13,9 @@ class Filters {
   @IsOptional()
   name: string;
 
-  @IsDateString()
+  @IsBoolean()
   @IsOptional()
-  birthDate: Date;
-
-  @IsDateString()
-  @IsOptional()
-  deathDate: Date;
+  isAlive: boolean;
 }
 
 export class QueryFindAuthorDto {
@@ -36,16 +32,17 @@ export class QueryFindAuthorDto {
 
 // {
 //   "filters": {
-//     "name": "henryk"
+//     "name": "a",
+//     "isAlive": true
 //   },
 //   "paginators": {
 //     "order": {
-//       "byColumn": "test",
-//       "direction": "ASC"
+//       "byColumn": "firstName",
+//       "direction": "DESC"
 //     },
 //     "page": {
 //       "size": 20,
-//       "index": 2
+//       "index": 1
 //     }
 //   }
 // }
