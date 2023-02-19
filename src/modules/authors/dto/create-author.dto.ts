@@ -35,11 +35,11 @@ export class CreateAuthorDto {
   readonly birthDate: Date;
 
   @ApiProperty({
-    example: '',
+    example: '1950-09-01',
   })
   @IsOptional()
   @IsDateString()
-  readonly deathDate: Date;
+  readonly deathDate?: Date;
 
   @ApiProperty({
     example: '',
