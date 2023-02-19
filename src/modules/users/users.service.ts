@@ -12,18 +12,12 @@ import { UserTypes } from '../../types/userTypes.enum';
 export class UsersService {
   constructor(
     @InjectRepository(User)
-    private usersRepository: Repository<User>,
+    private readonly usersRepository: Repository<User>,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserResponse> {
     if (createUserDto.type !== UserTypes.reader) {
-      const createdByUser = await this.findOne(createUserDto?.createdBy);
-
-      if (createdByUser.type !== UserTypes.admin) {
-        throw new Error(
-          `You don't have permission to create this type of user.`,
-        );
-      }
+      await this.checkIsAdmin(createUserDto.createdBy);
     }
 
     const cryptPassword = await this.cryptPassword(createUserDto.password);
@@ -83,8 +77,17 @@ export class UsersService {
     return cryptPassword;
   }
 
+  async checkIsAdmin(id: string): Promise<void> {
+    const user = await this.findOne(id);
+
+    if (user?.type !== UserTypes.admin) {
+      throw new Error("You don't permitted");
+    }
+  }
+
   private mapUser(user: User): UserResponse {
     return {
+      id: user.id,
       firstName: user.firstName,
       lastName: user.lastName,
       fullName: `${user.firstName} ${user.lastName}`,

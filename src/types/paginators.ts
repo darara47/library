@@ -11,8 +11,8 @@ import {
 
 enum PageSizes {
   small = 20,
-  medium = 50,
-  large = 100,
+  medium = 30,
+  large = 50,
 }
 
 enum OrderDirection {
@@ -35,7 +35,7 @@ class Order {
   readonly direction: OrderDirection;
 
   @IsString()
-  readonly byColumn: unknown;
+  readonly byColumn: string;
 }
 
 export class Paginators {

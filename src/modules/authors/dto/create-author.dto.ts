@@ -22,13 +22,6 @@ export class CreateAuthorDto {
   readonly lastName: string;
 
   @ApiProperty({
-    example: 'A long, long time ago ..',
-  })
-  @IsString()
-  @IsNotEmpty()
-  readonly biography: string;
-
-  @ApiProperty({
     example: '',
   })
   @IsDateString()

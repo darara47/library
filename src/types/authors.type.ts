@@ -1,8 +1,8 @@
 export type AuthorResponse = {
+  id: string;
   firstName: string;
   lastName: string;
   fullName: string;
-  biography: string;
   birthDate: Date;
   deathDate?: Date;
 };

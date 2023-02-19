@@ -19,9 +19,6 @@ export class Author {
   lastName: string;
 
   @Column()
-  biography: string;
-
-  @Column()
   birthDate: Date;
 
   @Column({ nullable: true })

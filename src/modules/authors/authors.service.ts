@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthorResponse } from 'src/types/authors.type';
 import { Repository } from 'typeorm';
+import { UsersService } from '../users/users.service';
 import { Author } from './author.entity';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { QueryFindAuthorDto } from './dto/query-find-author.dto';
@@ -11,10 +12,13 @@ import { UpdateAuthorDto } from './dto/update-author.dto';
 export class AuthorsService {
   constructor(
     @InjectRepository(Author)
-    private authorsRepository: Repository<Author>,
+    private readonly authorsRepository: Repository<Author>,
+    private readonly usersService: UsersService,
   ) {}
 
   async create(createAuthorDto: CreateAuthorDto): Promise<AuthorResponse> {
+    await this.usersService.checkIsAdmin(createAuthorDto.createdBy);
+
     const author = this.authorsRepository.create(createAuthorDto);
 
     await this.authorsRepository.save(author);
@@ -26,6 +30,8 @@ export class AuthorsService {
     id: string,
     updateAuthorDto: UpdateAuthorDto,
   ): Promise<AuthorResponse> {
+    await this.usersService.checkIsAdmin(updateAuthorDto.createdBy);
+
     const author = await this.authorsRepository.preload({
       ...updateAuthorDto,
       id,
@@ -41,8 +47,29 @@ export class AuthorsService {
   }
 
   async search(queryFindAuthorDto: QueryFindAuthorDto) {
-    // TODO
-    console.log({ queryFindAuthorDto });
+    const { filters, paginators } = queryFindAuthorDto;
+
+    const results = await this.authorsRepository
+      .createQueryBuilder('authors')
+      .where(
+        `LOWER(CONCAT(authors.firstName, ' ', authors.lastName)) LIKE LOWER(:name)`,
+        {
+          name: `%${filters.name}%`,
+        },
+      )
+      .andWhere(
+        filters.isAlive !== undefined &&
+          `authors.deathDate IS ${(!filters.isAlive && 'NOT') || ''} NULL`,
+      )
+      .orderBy(
+        `authors.${paginators.order.byColumn}`,
+        paginators.order.direction,
+      )
+      .offset(paginators.page.size * (paginators.page.index - 1))
+      .limit(paginators.page.size)
+      .getMany();
+
+    return this.mapAuthors(results);
   }
 
   async findOne(id: string): Promise<AuthorResponse> {
@@ -63,12 +90,16 @@ export class AuthorsService {
 
   private mapAuthor(author: Author): AuthorResponse {
     return {
+      id: author.id,
       firstName: author.firstName,
       lastName: author.lastName,
       fullName: `${author.firstName} ${author.lastName}`,
-      biography: author.biography,
       birthDate: author.birthDate,
       deathDate: author?.deathDate,
     };
+  }
+
+  private mapAuthors(authors: Author[]): AuthorResponse[] {
+    return authors.map((author) => this.mapAuthor(author));
   }
 }
