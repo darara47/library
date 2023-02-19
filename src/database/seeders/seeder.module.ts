@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
-import { AuthorsModule } from './modules/authors/authors.module';
-import { UsersModule } from './modules/users/users.module';
+import { AuthorsSeederModule } from './modules/authors/authors.seeder.module';
+import { UsersSeederModule } from './modules/users/users.seeder.module';
 
 dotenv.config();
 @Module({
@@ -17,10 +17,8 @@ dotenv.config();
       autoLoadEntities: true,
       synchronize: true,
     }),
-    UsersModule,
-    AuthorsModule,
+    UsersSeederModule,
+    AuthorsSeederModule,
   ],
-  controllers: [],
-  providers: [],
 })
-export class AppModule {}
+export class SeederModule {}
