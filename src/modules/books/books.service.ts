@@ -15,7 +15,11 @@ export class BooksService {
   ) {}
 
   async create(createBookDto: CreateBookDto): Promise<BookResponse> {
-    const book = this.booksRepository.create(createBookDto);
+    const { authorId } = createBookDto;
+    const book = this.booksRepository.create({
+      ...createBookDto,
+      author: { id: authorId },
+    });
     await this.booksRepository.save(book);
 
     return this.mapBook(book);
