@@ -1,5 +1,5 @@
 import { User } from 'src/modules/users/user.entity';
-import { UserTypes } from 'src/types/userTypes.enum';
+import { UserRoles } from 'src/types/userTypes.enum';
 
 export const usersMock: User[] = [
   {
@@ -13,7 +13,7 @@ export const usersMock: User[] = [
     resetPasswordCode: null,
     resetPasswordToken: null,
     resetPasswordTokenExpiresAt: null,
-    type: UserTypes.reader,
+    role: UserRoles.reader,
     createdBy: null,
     createdDate: new Date(),
     updatedDate: new Date(),
@@ -30,7 +30,7 @@ export const usersMock: User[] = [
     resetPasswordCode: null,
     resetPasswordToken: null,
     resetPasswordTokenExpiresAt: null,
-    type: UserTypes.librarian,
+    role: UserRoles.librarian,
     createdBy: null,
     createdDate: new Date(),
     updatedDate: new Date(),
@@ -47,7 +47,7 @@ export const usersMock: User[] = [
     resetPasswordCode: null,
     resetPasswordToken: null,
     resetPasswordTokenExpiresAt: null,
-    type: UserTypes.admin,
+    role: UserRoles.admin,
     createdBy: null,
     createdDate: new Date(),
     updatedDate: new Date(),

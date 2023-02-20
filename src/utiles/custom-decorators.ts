@@ -10,9 +10,10 @@ export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
 
 export const CurrentUser = createParamDecorator(
   (_data: unknown, context: ExecutionContext) => {
-    const mapUser = (user: JwtValidateAuthDto) => ({
-      email: user.email,
-      id: user.sub.userId,
+    const mapUser = (authData: JwtValidateAuthDto) => ({
+      email: authData.email,
+      id: authData.userId,
+      role: authData.role,
     });
 
     const request = context.switchToHttp().getRequest();

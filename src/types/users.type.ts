@@ -1,4 +1,4 @@
-import { UserTypes } from './userTypes.enum';
+import { UserRoles } from './userTypes.enum';
 
 export type UserResponse = {
   id: string;
@@ -6,5 +6,5 @@ export type UserResponse = {
   lastName: string;
   fullName: string;
   email: string;
-  type: UserTypes;
+  role: UserRoles;
 };
