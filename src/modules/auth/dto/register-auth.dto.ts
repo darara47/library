@@ -1,6 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsEnum, IsString, Length } from 'class-validator';
+import { IsEmail, IsEnum, IsString, Length, Matches } from 'class-validator';
 import { UserRoles } from 'src/types/userRoles.enum';
+import {
+  CHARTS_PATTERN,
+  NOT_WHITESPACES_PATTERN,
+  EMAIL_PATTERN,
+  PASSWORD_PATTERN,
+} from 'src/utiles/patterns';
 
 export class RegisterAuthDto {
   @ApiProperty({
@@ -8,6 +14,8 @@ export class RegisterAuthDto {
   })
   @Length(2, 50)
   @IsString()
+  @Matches(CHARTS_PATTERN)
+  @Matches(NOT_WHITESPACES_PATTERN)
   readonly firstName: string;
 
   @ApiProperty({
@@ -15,6 +23,8 @@ export class RegisterAuthDto {
   })
   @IsString()
   @Length(2, 50)
+  @Matches(CHARTS_PATTERN)
+  @Matches(NOT_WHITESPACES_PATTERN)
   readonly lastName: string;
 
   @ApiProperty({
@@ -22,6 +32,7 @@ export class RegisterAuthDto {
   })
   @IsEmail()
   @Length(0, 250)
+  @Matches(EMAIL_PATTERN)
   readonly email: string;
 
   @ApiProperty({
@@ -29,6 +40,7 @@ export class RegisterAuthDto {
   })
   @IsString()
   @Length(8)
+  @Matches(PASSWORD_PATTERN)
   readonly password: string;
 
   @ApiProperty({
