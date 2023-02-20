@@ -6,7 +6,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { UserTypes } from '../../../types/userTypes.enum';
+import { UserRoles } from 'src/types/userRoles.enum';
 
 export class CreateUserDto {
   @ApiProperty({
@@ -39,10 +39,10 @@ export class CreateUserDto {
   readonly password: string;
 
   @ApiProperty({
-    example: UserTypes.reader,
+    example: UserRoles.reader,
   })
-  @IsEnum(UserTypes)
-  readonly type: UserTypes;
+  @IsEnum(UserRoles)
+  readonly role: UserRoles;
 
   @ApiProperty({
     example: '',

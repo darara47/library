@@ -10,7 +10,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './user.entity';
 import * as bcrypt from 'bcryptjs';
 import { UserResponse } from '../../types/users.type';
-import { UserTypes } from '../../types/userTypes.enum';
+import { UserRoles } from 'src/types/userRoles.enum';
 
 @Injectable()
 export class UsersService {
@@ -20,7 +20,7 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserResponse> {
-    if (createUserDto.type !== UserTypes.reader) {
+    if (createUserDto.role !== UserRoles.reader) {
       await this.checkIsAdmin(createUserDto.createdBy);
     }
 
@@ -105,7 +105,7 @@ export class UsersService {
   async checkIsAdmin(id: string): Promise<void> {
     const user = await this.findOne(id);
 
-    if (user?.type !== UserTypes.admin) {
+    if (user?.role !== UserRoles.admin) {
       throw new Error("You don't permitted");
     }
   }
@@ -117,7 +117,7 @@ export class UsersService {
       lastName: user.lastName,
       fullName: `${user.firstName} ${user.lastName}`,
       email: user.email,
-      type: user.type,
+      role: user.role,
     };
   }
 }

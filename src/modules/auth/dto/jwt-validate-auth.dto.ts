@@ -1,17 +1,16 @@
-import { IsString, IsEmail, IsObject, IsNumber } from 'class-validator';
-
-class SubType {
-  @IsString()
-  readonly userId: string;
-}
+import { IsString, IsEmail, IsNumber, IsEnum } from 'class-validator';
+import { UserRoles } from 'src/types/userRoles.enum';
 
 export class JwtValidateAuthDto {
   @IsString()
   @IsEmail()
   readonly email: string;
 
-  @IsObject()
-  readonly sub: SubType;
+  @IsEnum(UserRoles)
+  readonly role: UserRoles;
+
+  @IsString()
+  readonly userId: string;
 
   @IsNumber()
   readonly iat: number;

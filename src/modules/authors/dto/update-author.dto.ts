@@ -27,12 +27,6 @@ class UpdateAuthorDtoProps {
   })
   @IsDateString()
   readonly deathDate: Date;
-
-  @ApiProperty({
-    example: '',
-  })
-  @IsString()
-  readonly createdBy: string;
 }
 
 export class UpdateAuthorDto extends PartialType(UpdateAuthorDtoProps) {}

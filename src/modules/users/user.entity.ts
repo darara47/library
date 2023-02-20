@@ -1,4 +1,4 @@
-import { UserTypes } from '../../types/userTypes.enum';
+import { UserRoles } from 'src/types/userRoles.enum';
 import {
   Column,
   CreateDateColumn,
@@ -44,10 +44,10 @@ export class User {
 
   @Column({
     type: 'enum',
-    enum: UserTypes,
-    default: UserTypes.reader,
+    enum: UserRoles,
+    default: UserRoles.reader,
   })
-  type: UserTypes;
+  role: UserRoles;
 
   @Column({ nullable: true })
   createdBy: string;
