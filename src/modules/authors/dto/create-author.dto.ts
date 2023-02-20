@@ -22,13 +22,13 @@ export class CreateAuthorDto {
   readonly lastName: string;
 
   @ApiProperty({
-    example: '',
+    example: '1950-09-01',
   })
   @IsDateString()
   readonly birthDate: Date;
 
   @ApiProperty({
-    example: '1950-09-01',
+    example: '',
   })
   @IsOptional()
   @IsDateString()

@@ -2,11 +2,11 @@ import { Type } from 'class-transformer';
 import {
   IsEnum,
   IsNumber,
-  IsOptional,
   IsPositive,
   IsObject,
   ValidateNested,
   IsString,
+  IsNotEmpty,
 } from 'class-validator';
 
 enum PageSizes {
@@ -25,7 +25,6 @@ class Page {
   readonly size: PageSizes;
 
   @IsNumber()
-  @IsOptional()
   @IsPositive()
   readonly index: number;
 }
@@ -35,6 +34,7 @@ class Order {
   readonly direction: OrderDirection;
 
   @IsString()
+  @IsNotEmpty()
   readonly byColumn: string;
 }
 

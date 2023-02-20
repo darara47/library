@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
 import { AuthorsSeederModule } from './modules/authors/authors.seeder.module';
+import { BooksSeederModule } from './modules/books/books.seeder.module';
 import { UsersSeederModule } from './modules/users/users.seeder.module';
 
 dotenv.config();
@@ -19,6 +20,7 @@ dotenv.config();
     }),
     UsersSeederModule,
     AuthorsSeederModule,
+    BooksSeederModule,
   ],
 })
 export class SeederModule {}
