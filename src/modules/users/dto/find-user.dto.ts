@@ -1,5 +1,5 @@
 import { PartialType } from '@nestjs/swagger';
-import { IsString, IsEmail } from 'class-validator';
+import { IsString, IsEmail, IsDate } from 'class-validator';
 
 class FindUserDtoProperties {
   @IsString()
@@ -10,5 +10,17 @@ class FindUserDtoProperties {
 
   @IsString()
   readonly activationAccountToken: string;
+
+  @IsDate()
+  readonly activationAccountTokenExpiresAt: Date;
+
+  @IsString()
+  readonly resetPasswordCode: string;
+
+  @IsString()
+  readonly resetPasswordToken: string;
+
+  @IsDate()
+  readonly resetPasswordTokenExpiresAt: Date;
 }
 export class FindUserDto extends PartialType(FindUserDtoProperties) {}

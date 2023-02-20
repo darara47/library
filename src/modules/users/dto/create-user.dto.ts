@@ -1,4 +1,4 @@
-import { IsEmail, IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { IsDate, IsEmail, IsEnum, IsNotEmpty, IsString } from 'class-validator';
 import { UserRoles } from 'src/types/userRoles.enum';
 
 export class CreateUserDto {
@@ -22,6 +22,9 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   readonly activationAccountToken: string;
+
+  @IsDate()
+  readonly activationAccountTokenExpiresAt: Date;
 
   @IsEnum(UserRoles)
   readonly role: UserRoles;

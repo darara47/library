@@ -11,6 +11,7 @@ import { User } from './user.entity';
 import * as bcrypt from 'bcryptjs';
 import { UserResponse } from '../../types/users.type';
 import { FindUserDto } from './dto/find-user.dto';
+import { ResetPasswordCodeAuthDto } from '../auth/dto/reset-password-code-auth.dto';
 
 @Injectable()
 export class UsersService {
@@ -36,9 +37,8 @@ export class UsersService {
     id: string,
     updateUserDto: UpdateUserDto,
   ): Promise<UserResponse> {
-    const cryptPassword =
-      updateUserDto.password &&
-      (await this.cryptPassword(updateUserDto.password));
+    const { password } = updateUserDto;
+    const cryptPassword = password && (await this.cryptPassword(password));
 
     const user = await this.usersRepository.preload({
       ...updateUserDto,
@@ -98,6 +98,19 @@ export class UsersService {
     if (isMatch !== true) {
       throwUnauthorizedException();
     }
+  }
+
+  async getResetPasswordToken(
+    resetPasswordCodeAuthDto: ResetPasswordCodeAuthDto,
+  ) {
+    const { email, code } = resetPasswordCodeAuthDto;
+
+    const { resetPasswordToken } = await this.usersRepository.findOne({
+      where: { email, resetPasswordCode: code },
+      select: { resetPasswordToken: true },
+    });
+
+    return resetPasswordToken;
   }
 
   private mapUser(user: User): UserResponse {

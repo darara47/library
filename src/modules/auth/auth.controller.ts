@@ -4,6 +4,9 @@ import { Public } from 'src/utiles/custom-decorators';
 import { AuthService } from './auth.service';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { RegisterAuthDto } from './dto/register-auth.dto';
+import { ResetPasswordAuthDto } from './dto/reset-password-auth.dto';
+import { ResetPasswordCodeAuthDto } from './dto/reset-password-code-auth.dto';
+import { SetPasswordAuthDto } from './dto/set-password-auth.dto';
 import { LocalAuthGuard } from './strategies/local-auth.guard';
 
 @ApiBearerAuth()
@@ -30,5 +33,28 @@ export class AuthController {
   async login(@Body() loginAuthDto: LoginAuthDto) {
     const { email } = loginAuthDto;
     return this.authService.login(email);
+  }
+
+  @Public()
+  @Post('reset-password')
+  async resetPassword(@Body() resetPasswordAuthDto: ResetPasswordAuthDto) {
+    return this.authService.resetPassword(resetPasswordAuthDto);
+  }
+
+  @Public()
+  @Post('reset-password-code')
+  async codeValidation(
+    @Body() resetPasswordCodeAuthDto: ResetPasswordCodeAuthDto,
+  ) {
+    return this.authService.codeValidation(resetPasswordCodeAuthDto);
+  }
+
+  @Public()
+  @Post('set-password')
+  async setPassword(
+    @Body()
+    setPasswordAuthDto: SetPasswordAuthDto,
+  ) {
+    return this.authService.setPassword(setPasswordAuthDto);
   }
 }
