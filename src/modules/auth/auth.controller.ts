@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/utiles/custom-decorators';
 import { AuthService } from './auth.service';
@@ -17,10 +17,5 @@ export class AuthController {
   async login(@Body() loginAuthDto: LoginAuthDto) {
     const { email } = loginAuthDto;
     return this.authService.login(email);
-  }
-
-  @Get('profile2')
-  getProfile2() {
-    console.log('WORKS');
   }
 }
