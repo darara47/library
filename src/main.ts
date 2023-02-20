@@ -18,6 +18,7 @@ async function bootstrap() {
     .setTitle('App to management library')
     .setDescription('All endpoints with example data')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

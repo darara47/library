@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -55,8 +59,8 @@ export class UsersService {
     return this.mapUser(user);
   }
 
-  async findOne(id: string): Promise<UserResponse> {
-    const user = await this.usersRepository.findOneBy({ id });
+  async findOne(id?: string, email?: string): Promise<UserResponse> {
+    const user = await this.usersRepository.findOneBy({ id, email });
 
     if (!user) {
       throw new NotFoundException(`User #${id} not found`);
@@ -75,6 +79,27 @@ export class UsersService {
     const salt = await bcrypt.genSalt();
     const cryptPassword = await bcrypt.hash(password, salt);
     return cryptPassword;
+  }
+
+  async authValidate(email: string, password: string): Promise<void> {
+    const throwUnauthorizedException = () => {
+      throw new UnauthorizedException(`Can't find user with given data.`);
+    };
+
+    const user = await this.usersRepository.findOne({
+      where: { email },
+      select: { password: true },
+    });
+
+    if (!user) {
+      throwUnauthorizedException();
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (isMatch !== true) {
+      throwUnauthorizedException();
+    }
   }
 
   async checkIsAdmin(id: string): Promise<void> {
