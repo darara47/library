@@ -18,7 +18,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate(payload: JwtValidateAuthDto) {
     try {
-      await this.usersService.findOne(payload.userId);
+      await this.usersService.findOne({ id: payload.userId });
     } catch (error) {
       throw new UnauthorizedException(`Can't find user with given token.`);
     }

@@ -49,9 +49,6 @@ export class User {
   })
   role: UserRoles;
 
-  @Column({ nullable: true })
-  createdBy: string;
-
   @CreateDateColumn({ select: false })
   createdDate: Date;
 
