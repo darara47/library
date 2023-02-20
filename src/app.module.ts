@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
 import { AuthorsModule } from './modules/authors/authors.module';
+import { BooksModule } from './modules/books/books.module';
 import { UsersModule } from './modules/users/users.module';
 
 dotenv.config();
@@ -19,6 +20,7 @@ dotenv.config();
     }),
     UsersModule,
     AuthorsModule,
+    BooksModule,
   ],
   controllers: [],
   providers: [],
