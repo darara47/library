@@ -81,7 +81,9 @@ export class UsersService {
 
   async loginValidation(email: string, password: string): Promise<void> {
     const throwUnauthorizedException = () => {
-      throw new UnauthorizedException(`Can't find user with given data.`);
+      throw new UnauthorizedException(
+        `Can't find user with given credentials.`,
+      );
     };
 
     const user = await this.usersRepository.findOne({
@@ -105,10 +107,18 @@ export class UsersService {
   ) {
     const { email, code } = resetPasswordCodeAuthDto;
 
-    const { resetPasswordToken } = await this.usersRepository.findOne({
+    const user = await this.usersRepository.findOne({
       where: { email, resetPasswordCode: code },
       select: { resetPasswordToken: true },
     });
+
+    if (!user) {
+      throw new UnauthorizedException(
+        `Can't find user with given credentials.`,
+      );
+    }
+
+    const { resetPasswordToken } = user;
 
     return resetPasswordToken;
   }

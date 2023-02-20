@@ -1,4 +1,4 @@
-import { UserRoles } from 'src/types/userRoles.enum';
+import { UserRoles } from '../../types/userRoles.enum';
 import {
   Column,
   CreateDateColumn,
