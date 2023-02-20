@@ -30,6 +30,9 @@ class UpdateUserDtoProps {
   @IsString()
   @IsNotEmpty()
   readonly password: string;
+
+  @IsString()
+  readonly activationAccountToken: string;
 }
 
 export class UpdateUserDto extends PartialType(UpdateUserDtoProps) {}

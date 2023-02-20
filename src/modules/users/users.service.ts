@@ -4,13 +4,13 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { IsNull, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './user.entity';
 import * as bcrypt from 'bcryptjs';
 import { UserResponse } from '../../types/users.type';
-import { UserRoles } from 'src/types/userRoles.enum';
+import { FindUserDto } from './dto/find-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -20,10 +20,6 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserResponse> {
-    if (createUserDto.role !== UserRoles.reader) {
-      await this.checkIsAdmin(createUserDto.createdBy);
-    }
-
     const cryptPassword = await this.cryptPassword(createUserDto.password);
 
     const user = this.usersRepository.create({
@@ -59,18 +55,20 @@ export class UsersService {
     return this.mapUser(user);
   }
 
-  async findOne(id?: string, email?: string): Promise<UserResponse> {
-    const user = await this.usersRepository.findOneBy({ id, email });
+  async findOne(findUserDto: FindUserDto): Promise<UserResponse> {
+    const user = await this.usersRepository.findOneBy(findUserDto);
 
     if (!user) {
-      throw new NotFoundException(`User #${id} not found`);
+      throw new NotFoundException(
+        `User with properties ${JSON.stringify(findUserDto)} not found`,
+      );
     }
 
     return this.mapUser(user);
   }
 
   async remove(id: string): Promise<void> {
-    const user = await this.findOne(id);
+    const user = await this.findOne({ id });
 
     await this.usersRepository.softRemove(user);
   }
@@ -81,13 +79,13 @@ export class UsersService {
     return cryptPassword;
   }
 
-  async authValidate(email: string, password: string): Promise<void> {
+  async loginValidation(email: string, password: string): Promise<void> {
     const throwUnauthorizedException = () => {
       throw new UnauthorizedException(`Can't find user with given data.`);
     };
 
     const user = await this.usersRepository.findOne({
-      where: { email },
+      where: { email, activationAccountToken: IsNull() },
       select: { password: true },
     });
 
@@ -99,14 +97,6 @@ export class UsersService {
 
     if (isMatch !== true) {
       throwUnauthorizedException();
-    }
-  }
-
-  async checkIsAdmin(id: string): Promise<void> {
-    const user = await this.findOne(id);
-
-    if (user?.role !== UserRoles.admin) {
-      throw new Error("You don't permitted");
     }
   }
 
