@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, Length } from 'class-validator';
+import { IsNotEmpty, IsString, Length, Matches } from 'class-validator';
+import { PASSWORD_PATTERN } from 'src/utiles/patterns';
 
 export class SetPasswordAuthDto {
   @ApiProperty({
@@ -7,6 +8,7 @@ export class SetPasswordAuthDto {
   })
   @IsString()
   @Length(8)
+  @Matches(PASSWORD_PATTERN)
   readonly password: string;
 
   @ApiProperty({

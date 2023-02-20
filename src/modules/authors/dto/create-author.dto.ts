@@ -4,7 +4,9 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  Matches,
 } from 'class-validator';
+import { CHARTS_PATTERN, NOT_WHITESPACES_PATTERN } from 'src/utiles/patterns';
 
 export class CreateAuthorDto {
   @ApiProperty({
@@ -12,6 +14,8 @@ export class CreateAuthorDto {
   })
   @IsString()
   @IsNotEmpty()
+  @Matches(CHARTS_PATTERN)
+  @Matches(NOT_WHITESPACES_PATTERN)
   readonly firstName: string;
 
   @ApiProperty({
@@ -19,6 +23,8 @@ export class CreateAuthorDto {
   })
   @IsString()
   @IsNotEmpty()
+  @Matches(CHARTS_PATTERN)
+  @Matches(NOT_WHITESPACES_PATTERN)
   readonly lastName: string;
 
   @ApiProperty({

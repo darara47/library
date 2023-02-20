@@ -1,5 +1,6 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
-import { IsDateString, IsNotEmpty, IsString } from 'class-validator';
+import { IsDateString, IsNotEmpty, IsString, Matches } from 'class-validator';
+import { CHARTS_PATTERN, NOT_WHITESPACES_PATTERN } from 'src/utiles/patterns';
 
 class UpdateAuthorDtoProps {
   @ApiProperty({
@@ -7,6 +8,8 @@ class UpdateAuthorDtoProps {
   })
   @IsString()
   @IsNotEmpty()
+  @Matches(CHARTS_PATTERN)
+  @Matches(NOT_WHITESPACES_PATTERN)
   readonly firstName: string;
 
   @ApiProperty({
@@ -14,6 +17,8 @@ class UpdateAuthorDtoProps {
   })
   @IsString()
   @IsNotEmpty()
+  @Matches(CHARTS_PATTERN)
+  @Matches(NOT_WHITESPACES_PATTERN)
   readonly lastName: string;
 
   @ApiProperty({
