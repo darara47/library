@@ -54,7 +54,6 @@ export class BooksService {
       .offset(paginators.page.size * (paginators.page.index - 1))
       .limit(paginators.page.size)
       .getMany();
-    console.log(results);
 
     return this.mapBooks(results);
   }
