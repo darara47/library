@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthorResponse } from 'src/types/authors.type';
 import { Repository } from 'typeorm';
-import { UsersService } from '../users/users.service';
 import { Author } from './author.entity';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { QueryFindAuthorDto } from './dto/query-find-author.dto';
@@ -13,14 +12,16 @@ export class AuthorsService {
   constructor(
     @InjectRepository(Author)
     private readonly authorsRepository: Repository<Author>,
-    private readonly usersService: UsersService,
   ) {}
 
-  async create(createAuthorDto: CreateAuthorDto): Promise<AuthorResponse> {
-    await this.usersService.checkIsAdmin(createAuthorDto.createdBy);
-
-    const author = this.authorsRepository.create(createAuthorDto);
-
+  async create(
+    createAuthorDto: CreateAuthorDto,
+    userId: string,
+  ): Promise<AuthorResponse> {
+    const author = this.authorsRepository.create({
+      ...createAuthorDto,
+      createdBy: userId,
+    });
     await this.authorsRepository.save(author);
 
     return this.mapAuthor(author);
@@ -30,8 +31,6 @@ export class AuthorsService {
     id: string,
     updateAuthorDto: UpdateAuthorDto,
   ): Promise<AuthorResponse> {
-    await this.usersService.checkIsAdmin(updateAuthorDto.createdBy);
-
     const author = await this.authorsRepository.preload({
       ...updateAuthorDto,
       id,

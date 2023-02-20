@@ -33,10 +33,4 @@ export class CreateAuthorDto {
   @IsOptional()
   @IsDateString()
   readonly deathDate?: Date;
-
-  @ApiProperty({
-    example: '',
-  })
-  @IsString()
-  readonly createdBy: string;
 }

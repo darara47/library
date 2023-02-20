@@ -6,7 +6,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { UserRoles } from 'src/types/userTypes.enum';
+import { UserRoles } from 'src/types/userRoles.enum';
 
 export class CreateUserDto {
   @ApiProperty({

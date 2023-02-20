@@ -10,7 +10,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './user.entity';
 import * as bcrypt from 'bcryptjs';
 import { UserResponse } from '../../types/users.type';
-import { UserRoles } from 'src/types/userTypes.enum';
+import { UserRoles } from 'src/types/userRoles.enum';
 
 @Injectable()
 export class UsersService {

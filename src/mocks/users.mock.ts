@@ -1,5 +1,5 @@
 import { User } from 'src/modules/users/user.entity';
-import { UserRoles } from 'src/types/userTypes.enum';
+import { UserRoles } from 'src/types/userRoles.enum';
 
 export const usersMock: User[] = [
   {
