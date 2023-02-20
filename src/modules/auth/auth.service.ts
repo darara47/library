@@ -20,16 +20,21 @@ export class AuthService {
     const { email } = registerAuthDto;
 
     const activationAccountToken = generateTokenByString(email);
+    const nextWeek = dayjs().add(1, 'week') as unknown as Date;
 
     await this.usersService.create({
       ...registerAuthDto,
       activationAccountToken,
+      activationAccountTokenExpiresAt: nextWeek,
     });
   }
 
   async activate(activationAccountToken: string): Promise<{ name: string }> {
     const user = await this.usersService.findOne({
       activationAccountToken,
+      activationAccountTokenExpiresAt: Raw(
+        (alias) => `${alias} > NOW()`,
+      ) as any,
     });
 
     await this.usersService.update(user.id, { activationAccountToken: null });

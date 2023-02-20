@@ -1,5 +1,5 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
-import { IsDateString, IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { IsDate, IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
 class UpdateUserDtoProps {
   @ApiProperty({
@@ -34,13 +34,16 @@ class UpdateUserDtoProps {
   @IsString()
   readonly activationAccountToken: string;
 
+  @IsDate()
+  readonly activationAccountTokenExpiresAt: Date;
+
   @IsString()
   readonly resetPasswordCode: string;
 
   @IsString()
   readonly resetPasswordToken: string;
 
-  @IsDateString()
+  @IsDate()
   readonly resetPasswordTokenExpiresAt: Date;
 }
 

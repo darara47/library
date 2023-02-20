@@ -11,6 +11,9 @@ class FindUserDtoProperties {
   @IsString()
   readonly activationAccountToken: string;
 
+  @IsDate()
+  readonly activationAccountTokenExpiresAt: Date;
+
   @IsString()
   readonly resetPasswordCode: string;
 
