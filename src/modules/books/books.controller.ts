@@ -1,11 +1,12 @@
 import { Body, Controller, Delete, Param, Patch, Post } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { BookResponse } from 'src/types/books.type';
 import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { QueryFindBookDto } from './dto/query-find-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 
+@ApiBearerAuth()
 @ApiTags('Books')
 @Controller('books')
 export class BooksController {

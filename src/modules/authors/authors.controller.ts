@@ -1,11 +1,12 @@
 import { Body, Controller, Delete, Param, Patch, Post } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthorResponse } from 'src/types/authors.type';
 import { AuthorsService } from './authors.service';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { QueryFindAuthorDto } from './dto/query-find-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
 
+@ApiBearerAuth()
 @ApiTags('Authors')
 @Controller('authors')
 export class AuthorsController {
