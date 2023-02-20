@@ -9,8 +9,8 @@ import { UserRoles } from 'src/types/userRoles.enum';
 export const IS_PUBLIC_KEY = 'isPublic';
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
 
-export const ROLES_KEY = 'roles';
-export const Roles = (role: UserRoles) => SetMetadata(ROLES_KEY, role);
+export const ROLE_KEY = 'role';
+export const Role = (role: UserRoles) => SetMetadata(ROLE_KEY, role);
 
 export const CurrentUser = createParamDecorator(
   (_data: unknown, context: ExecutionContext) => {

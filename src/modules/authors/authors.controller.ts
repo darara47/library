@@ -3,7 +3,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthorResponse } from 'src/types/authors.type';
 import { LoggedUser } from 'src/types/loggedUser.type';
 import { UserRoles } from 'src/types/userRoles.enum';
-import { CurrentUser, Roles } from 'src/utiles/custom-decorators';
+import { CurrentUser, Role } from 'src/utiles/custom-decorators';
 import { AuthorsService } from './authors.service';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { QueryFindAuthorDto } from './dto/query-find-author.dto';
@@ -16,7 +16,7 @@ export class AuthorsController {
   constructor(private authorsService: AuthorsService) {}
 
   @Post()
-  @Roles(UserRoles.admin)
+  @Role(UserRoles.admin)
   async create(
     @Body() createAuthorDto: CreateAuthorDto,
     @CurrentUser() loggedUser: LoggedUser,
@@ -30,7 +30,7 @@ export class AuthorsController {
   }
 
   @Patch(':id')
-  @Roles(UserRoles.admin)
+  @Role(UserRoles.admin)
   async update(
     @Body() updateAuthorDto: UpdateAuthorDto,
     @Param('id') id: string,
@@ -39,6 +39,7 @@ export class AuthorsController {
   }
 
   @Delete(':id')
+  @Role(UserRoles.admin)
   async remove(@Param('id') id: string): Promise<void> {
     return this.authorsService.remove(id);
   }
