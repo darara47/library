@@ -16,7 +16,7 @@ export class AuthService {
     private usersService: UsersService,
   ) {}
 
-  async register(registerAuthDto: RegisterAuthDto) {
+  async register(registerAuthDto: RegisterAuthDto): Promise<void> {
     const { email } = registerAuthDto;
 
     const activationAccountToken = generateTokenByString(email);
@@ -42,7 +42,7 @@ export class AuthService {
     return { name: user.fullName };
   }
 
-  async login(email: string) {
+  async login(email: string): Promise<{ accessToken: string }> {
     const user = await this.usersService.findOne({ email });
     const payload = {
       email: user.email,

@@ -1,5 +1,11 @@
 import { Body, Controller, Param, Post, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Public } from 'src/utiles/custom-decorators';
 import { AuthService } from './auth.service';
 import { LoginAuthDto } from './dto/login-auth.dto';
@@ -15,46 +21,100 @@ import { LocalAuthGuard } from './strategies/local-auth.guard';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Public()
   @Post('register')
-  async register(@Body() registerAuthDto: RegisterAuthDto) {
+  @Public()
+  @ApiOperation({ summary: 'Create new user.' })
+  @ApiCreatedResponse({
+    description: 'Successfully created.',
+  })
+  @ApiResponse({
+    status: '4XX',
+    description: 'The error happened.',
+  })
+  async register(@Body() registerAuthDto: RegisterAuthDto): Promise<void> {
     return this.authService.register(registerAuthDto);
   }
 
-  @Public()
   @Post('activate/:activationToken')
-  async activate(@Param('activationToken') activationToken: string) {
+  @Public()
+  @ApiOperation({ summary: 'Activate user account.' })
+  @ApiCreatedResponse({
+    description: 'Successfully activated.',
+  })
+  @ApiResponse({
+    status: '4XX',
+    description: 'The error happened.',
+  })
+  async activate(
+    @Param('activationToken') activationToken: string,
+  ): Promise<{ name: string }> {
     return this.authService.activate(activationToken);
   }
 
-  @UseGuards(LocalAuthGuard)
-  @Public()
   @Post('login')
-  async login(@Body() loginAuthDto: LoginAuthDto) {
+  @Public()
+  @UseGuards(LocalAuthGuard)
+  @ApiOperation({ summary: 'Login.' })
+  @ApiCreatedResponse({
+    description: 'Successfully logged.',
+  })
+  @ApiResponse({
+    status: '4XX',
+    description: 'The error happened.',
+  })
+  async login(
+    @Body() loginAuthDto: LoginAuthDto,
+  ): Promise<{ accessToken: string }> {
     const { email } = loginAuthDto;
     return this.authService.login(email);
   }
 
-  @Public()
   @Post('reset-password')
-  async resetPassword(@Body() resetPasswordAuthDto: ResetPasswordAuthDto) {
+  @Public()
+  @ApiOperation({ summary: 'Reset password.' })
+  @ApiCreatedResponse({
+    description: 'Successfully password reset.',
+  })
+  @ApiResponse({
+    status: '4XX',
+    description: 'The error happened.',
+  })
+  async resetPassword(
+    @Body() resetPasswordAuthDto: ResetPasswordAuthDto,
+  ): Promise<void> {
     return this.authService.resetPassword(resetPasswordAuthDto);
   }
 
   @Public()
   @Post('reset-password-code')
+  @ApiOperation({ summary: 'Verify code to password reset.' })
+  @ApiCreatedResponse({
+    description: 'Successfully validated.',
+  })
+  @ApiResponse({
+    status: '4XX',
+    description: 'The error happened.',
+  })
   async codeValidation(
     @Body() resetPasswordCodeAuthDto: ResetPasswordCodeAuthDto,
-  ) {
+  ): Promise<{ resetPasswordToken: string }> {
     return this.authService.codeValidation(resetPasswordCodeAuthDto);
   }
 
   @Public()
   @Post('set-password')
+  @ApiOperation({ summary: 'Set new password.' })
+  @ApiCreatedResponse({
+    description: 'Successfully set password.',
+  })
+  @ApiResponse({
+    status: '4XX',
+    description: 'The error happened.',
+  })
   async setPassword(
     @Body()
     setPasswordAuthDto: SetPasswordAuthDto,
-  ) {
+  ): Promise<void> {
     return this.authService.setPassword(setPasswordAuthDto);
   }
 }

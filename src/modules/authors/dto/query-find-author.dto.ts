@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsBoolean,
@@ -9,40 +10,31 @@ import {
 import { Paginators } from 'src/types/paginators';
 
 class Filters {
+  @ApiProperty({
+    example: 'wi',
+  })
   @IsString()
   @IsOptional()
   name: string;
 
+  @ApiProperty({
+    example: false,
+  })
   @IsBoolean()
   @IsOptional()
   isAlive: boolean;
 }
 
 export class QueryFindAuthorDto {
+  @ApiProperty()
   @IsObject()
   @ValidateNested()
   @Type(() => Filters)
   readonly filters: Filters;
 
+  @ApiProperty()
   @IsObject()
   @ValidateNested()
   @Type(() => Paginators)
   readonly paginators: Paginators;
 }
-
-// {
-//   "filters": {
-//     "name": "a",
-//     "isAlive": true
-//   },
-//   "paginators": {
-//     "order": {
-//       "byColumn": "firstName",
-//       "direction": "DESC"
-//     },
-//     "page": {
-//       "size": 20,
-//       "index": 1
-//     }
-//   }
-// }

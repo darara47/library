@@ -1,9 +1,16 @@
 import { Body, Controller, Delete, Param, Patch, Post } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AuthorResponse } from 'src/types/authors.type';
 import { LoggedUser } from 'src/types/loggedUser.type';
 import { UserRoles } from 'src/types/userRoles.enum';
-import { CurrentUser, Role } from 'src/utiles/custom-decorators';
+import { CurrentUser, Public, Role } from 'src/utiles/custom-decorators';
 import { AuthorsService } from './authors.service';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { QueryFindAuthorDto } from './dto/query-find-author.dto';
@@ -16,6 +23,15 @@ export class AuthorsController {
   constructor(private authorsService: AuthorsService) {}
 
   @Post()
+  @ApiOperation({ summary: 'Create new author.' })
+  @ApiCreatedResponse({
+    description: 'Successfully created.',
+    type: AuthorResponse,
+  })
+  @ApiResponse({
+    status: '4XX',
+    description: 'The error happened.',
+  })
   @Role(UserRoles.admin)
   async create(
     @Body() createAuthorDto: CreateAuthorDto,
@@ -25,11 +41,32 @@ export class AuthorsController {
   }
 
   @Post('search')
-  search(@Body() queryFindAuthorDto: QueryFindAuthorDto) {
+  @ApiOperation({ summary: 'Search authors.' })
+  @ApiOkResponse({
+    description: 'Results returned.',
+    type: Array<AuthorResponse>,
+  })
+  @ApiResponse({
+    status: '4XX',
+    description: 'The error happened.',
+  })
+  @Public()
+  search(
+    @Body() queryFindAuthorDto: QueryFindAuthorDto,
+  ): Promise<AuthorResponse[]> {
     return this.authorsService.search(queryFindAuthorDto);
   }
 
   @Patch(':id')
+  @ApiOperation({ summary: 'Update author.' })
+  @ApiOkResponse({
+    description: 'Successfully updated.',
+    type: AuthorResponse,
+  })
+  @ApiResponse({
+    status: '4XX',
+    description: 'The error happened.',
+  })
   @Role(UserRoles.admin)
   async update(
     @Body() updateAuthorDto: UpdateAuthorDto,
@@ -39,6 +76,14 @@ export class AuthorsController {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Remove author.' })
+  @ApiOkResponse({
+    description: 'Successfully removed.',
+  })
+  @ApiResponse({
+    status: '4XX',
+    description: 'The error happened.',
+  })
   @Role(UserRoles.admin)
   async remove(@Param('id') id: string): Promise<void> {
     return this.authorsService.remove(id);
