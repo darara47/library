@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { BookResponse } from 'src/types/books.type';
+import { BookResponse } from 'src/types/book.type';
 import { Repository } from 'typeorm';
 import { Book } from './book.entity';
 import { CreateBookDto } from './dto/create-book.dto';
@@ -76,6 +76,26 @@ export class BooksService {
     const book = await this.findOne(id);
 
     await this.booksRepository.softRemove(book);
+  }
+
+  async checkIfAvailable(id: string): Promise<boolean> {
+    const book = await this.findOne(id);
+    const isAvailable = book.availableCopies > 0;
+    return isAvailable;
+  }
+
+  async borrow(id: string): Promise<void> {
+    const book = await this.findOne(id);
+    const newAvailableCopies = book.availableCopies - 1;
+
+    await this.update(id, { availableCopies: newAvailableCopies });
+  }
+
+  async return(id: string): Promise<void> {
+    const book = await this.findOne(id);
+    const newAvailableCopies = book.availableCopies + 1;
+
+    await this.update(id, { availableCopies: newAvailableCopies });
   }
 
   private mapBook(book: Book): BookResponse {

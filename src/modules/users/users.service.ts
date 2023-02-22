@@ -9,7 +9,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './user.entity';
 import * as bcrypt from 'bcryptjs';
-import { UserResponse } from '../../types/users.type';
+import { UserResponse } from '../../types/user.type';
 import { FindUserDto } from './dto/find-user.dto';
 import { ResetPasswordCodeAuthDto } from '../auth/dto/reset-password-code-auth.dto';
 
