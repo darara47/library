@@ -7,7 +7,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { AuthorResponse } from 'src/types/authors.type';
+import { AuthorResponse } from 'src/types/author.type';
 import { LoggedUser } from 'src/types/loggedUser.type';
 import { UserRoles } from 'src/types/userRoles.enum';
 import { CurrentUser, Public, Role } from 'src/utiles/custom-decorators';

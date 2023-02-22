@@ -8,7 +8,7 @@ import {
 } from '@nestjs/swagger';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
-import { UserResponse } from '../../types/users.type';
+import { UserResponse } from '../../types/user.type';
 import { CurrentUser } from 'src/utiles/custom-decorators';
 import { LoggedUser } from 'src/types/loggedUser.type';
 

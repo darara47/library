@@ -7,6 +7,7 @@ import { JwtAuthGuard } from './modules/auth/strategies/jwt-auth.guard';
 import { RolesGuard } from './modules/auth/strategies/role-auth.guard';
 import { AuthorsModule } from './modules/authors/authors.module';
 import { BooksModule } from './modules/books/books.module';
+import { BorrowedBooksModule } from './modules/borrowed-books/borrowed-books.module';
 import { UsersModule } from './modules/users/users.module';
 
 dotenv.config();
@@ -26,6 +27,7 @@ dotenv.config();
     UsersModule,
     AuthorsModule,
     BooksModule,
+    BorrowedBooksModule,
   ],
   controllers: [],
   providers: [

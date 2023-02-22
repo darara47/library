@@ -7,7 +7,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { BookResponse } from 'src/types/books.type';
+import { BookResponse } from 'src/types/book.type';
 import { UserRoles } from 'src/types/userRoles.enum';
 import { Role } from 'src/utiles/custom-decorators';
 import { BooksService } from './books.service';
