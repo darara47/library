@@ -28,12 +28,12 @@ $ npm run test:watch
 ## Database
 
 ```bash
+# generate migration
+$ npm run migrations:generate
+
+# run migration
+$ npm run migrations:run
+
 # run seeds
 $ npm run seed
-
-# generate migration
-$ npx typeorm-ts-node-esm migration:generate -d src/database/data-source.ts src/database/migrations/setup
-
-# generate migration
-$ npx typeorm-ts-node-esm migration:generate -d src/database/data-source.ts src/database/migrations/setup
 ```
