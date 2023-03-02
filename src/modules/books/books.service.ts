@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { QueryRunnerSource } from 'src/database/transactions/query-runner';
 import { BookResponse } from 'src/types/book.type';
-import { Repository } from 'typeorm';
+import { QueryRunner, Repository } from 'typeorm';
 import { Book } from './book.entity';
 import { CreateBookDto } from './dto/create-book.dto';
 import { QueryFindBookDto } from './dto/query-find-book.dto';
@@ -12,6 +13,7 @@ export class BooksService {
   constructor(
     @InjectRepository(Book)
     private readonly booksRepository: Repository<Book>,
+    private readonly queryRunnerSource: QueryRunnerSource,
   ) {}
 
   async create(createBookDto: CreateBookDto): Promise<BookResponse> {
@@ -28,19 +30,31 @@ export class BooksService {
   async update(
     id: string,
     updateBookDto: UpdateBookDto,
+    continueQueryRunner?: QueryRunner,
   ): Promise<BookResponse> {
-    const book = await this.booksRepository.preload({
-      ...updateBookDto,
-      id,
-    });
+    const queryRunner =
+      continueQueryRunner || (await this.queryRunnerSource.create());
 
-    if (!book) {
-      throw new NotFoundException(`Book #${id} not found`);
+    try {
+      const book = await queryRunner.manager.preload(Book, {
+        ...updateBookDto,
+        id,
+      });
+
+      if (!book) {
+        throw new NotFoundException(`Book #${id} not found`);
+      }
+
+      await queryRunner.manager.save(book);
+
+      continueQueryRunner || (await queryRunner.commitTransaction());
+      return this.mapBook(book);
+    } catch (err) {
+      await queryRunner.rollbackTransaction();
+      throw err;
+    } finally {
+      continueQueryRunner || (await queryRunner.release());
     }
-
-    await this.booksRepository.save(book);
-
-    return this.mapBook(book);
   }
 
   async search(queryFindBookDto: QueryFindBookDto) {
@@ -84,18 +98,26 @@ export class BooksService {
     return isAvailable;
   }
 
-  async borrow(id: string): Promise<void> {
+  async borrow(id: string, continueQueryRunner: QueryRunner): Promise<void> {
     const book = await this.findOne(id);
     const newAvailableCopies = book.availableCopies - 1;
 
-    await this.update(id, { availableCopies: newAvailableCopies });
+    await this.update(
+      id,
+      { availableCopies: newAvailableCopies },
+      continueQueryRunner,
+    );
   }
 
-  async return(id: string): Promise<void> {
+  async return(id: string, continueQueryRunner: QueryRunner): Promise<void> {
     const book = await this.findOne(id);
     const newAvailableCopies = book.availableCopies + 1;
 
-    await this.update(id, { availableCopies: newAvailableCopies });
+    await this.update(
+      id,
+      { availableCopies: newAvailableCopies },
+      continueQueryRunner,
+    );
   }
 
   private mapBook(book: Book): BookResponse {
