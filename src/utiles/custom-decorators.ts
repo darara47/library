@@ -3,8 +3,8 @@ import {
   ExecutionContext,
   SetMetadata,
 } from '@nestjs/common';
-import { JwtValidateAuthDto } from 'src/modules/auth/dto/jwt-validate-auth.dto';
-import { UserRoles } from 'src/types/userRoles.enum';
+import { JwtValidateAuthDto } from '../modules/auth/dto/jwt-validate-auth.dto';
+import { UserRoles } from '../types/userRoles.enum';
 
 export const IS_PUBLIC_KEY = 'isPublic';
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);

@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { QueryRunnerSource } from 'src/database/transactions/query-runner';
-import { BookResponse } from 'src/types/book.type';
+import { QueryRunnerSource } from '../../database/transactions/query-runner';
+import { BookResponse } from '../../types/book.type';
 import { QueryRunner, Repository } from 'typeorm';
 import { Book } from './book.entity';
 import { CreateBookDto } from './dto/create-book.dto';

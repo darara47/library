@@ -7,7 +7,7 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { Paginators } from 'src/types/paginators';
+import { Paginators } from '../../../types/paginators';
 
 class Filters {
   @ApiProperty({

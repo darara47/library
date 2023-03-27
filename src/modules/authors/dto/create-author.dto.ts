@@ -6,7 +6,10 @@ import {
   IsString,
   Matches,
 } from 'class-validator';
-import { CHARTS_PATTERN, NOT_WHITESPACES_PATTERN } from 'src/utiles/patterns';
+import {
+  CHARTS_PATTERN,
+  NOT_WHITESPACES_PATTERN,
+} from '../../../utiles/patterns';
 
 export class CreateAuthorDto {
   @ApiProperty({

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Author } from 'src/modules/authors/author.entity';
+import { Author } from '../../../../modules/authors/author.entity';
 import { AuthorsSeederService } from './authors.seeder.service';
 
 @Module({

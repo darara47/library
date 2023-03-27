@@ -7,10 +7,10 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { AuthorResponse } from 'src/types/author.type';
-import { LoggedUser } from 'src/types/loggedUser.type';
-import { UserRoles } from 'src/types/userRoles.enum';
-import { CurrentUser, Public, Role } from 'src/utiles/custom-decorators';
+import { AuthorResponse } from '../../types/author.type';
+import { LoggedUser } from '../../types/loggedUser.type';
+import { UserRoles } from '../../types/userRoles.enum';
+import { CurrentUser, Public, Role } from '../../utiles/custom-decorators';
 import { AuthorsService } from './authors.service';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { QueryFindAuthorDto } from './dto/query-find-author.dto';

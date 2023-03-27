@@ -6,13 +6,13 @@ import {
   IsString,
   Matches,
 } from 'class-validator';
-import { UserRoles } from 'src/types/userRoles.enum';
+import { UserRoles } from '../../../types/userRoles.enum';
 import {
   CHARTS_PATTERN,
   NOT_WHITESPACES_PATTERN,
   EMAIL_PATTERN,
   PASSWORD_PATTERN,
-} from 'src/utiles/patterns';
+} from '../../../utiles/patterns';
 
 export class CreateUserDto {
   @IsString()

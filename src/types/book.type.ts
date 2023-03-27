@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Author } from 'src/modules/authors/author.entity';
+import { Author } from '../modules/authors/author.entity';
 
 export class BookResponse {
   @ApiProperty()

@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { generateTokenByString } from 'src/utiles/generateTokenByString';
+import { generateTokenByString } from '../../utiles/generateTokenByString';
 import { Raw } from 'typeorm';
 import * as dayjs from 'dayjs';
 import { UsersService } from '../users/users.service';
