@@ -30,3 +30,5 @@ $ npm run migrations:run
 # run seeds
 $ npm run seed
 ```
+
+### [Checkout app on vercel here!](https://library-git-develop-darara47.vercel.app/api)
