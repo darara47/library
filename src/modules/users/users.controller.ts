@@ -19,7 +19,7 @@ export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Update logged user.' })
+  @ApiOperation({ summary: 'Get logged user.' })
   @ApiOkResponse({
     description: 'Results returned.',
     type: UserResponse,

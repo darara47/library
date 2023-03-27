@@ -9,19 +9,19 @@ import {
 } from '@nestjs/swagger';
 import { BookResponse } from '../../types/book.type';
 import { UserRoles } from '../../types/userRoles.enum';
-import { Role } from '../../utiles/custom-decorators';
+import { Public, Role } from '../../utiles/custom-decorators';
 import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { QueryFindBookDto } from './dto/query-find-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 
-@ApiBearerAuth()
 @ApiTags('Books')
 @Controller('books')
 export class BooksController {
   constructor(private booksService: BooksService) {}
 
   @Post()
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Create new book.' })
   @ApiCreatedResponse({
     description: 'Successfully created.',
@@ -46,11 +46,13 @@ export class BooksController {
     status: '4XX',
     description: 'The error happened.',
   })
+  @Public()
   search(@Body() queryFindBookDto: QueryFindBookDto): Promise<BookResponse[]> {
     return this.booksService.search(queryFindBookDto);
   }
 
   @Patch(':id')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Update book.' })
   @ApiOkResponse({
     description: 'Successfully updated.',
@@ -69,6 +71,7 @@ export class BooksController {
   }
 
   @Delete(':id')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Remove book.' })
   @ApiOkResponse({
     description: 'Successfully removed.',

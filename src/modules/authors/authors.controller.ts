@@ -16,13 +16,13 @@ import { CreateAuthorDto } from './dto/create-author.dto';
 import { QueryFindAuthorDto } from './dto/query-find-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
 
-@ApiBearerAuth()
 @ApiTags('Authors')
 @Controller('authors')
 export class AuthorsController {
   constructor(private authorsService: AuthorsService) {}
 
   @Post()
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Create new author.' })
   @ApiCreatedResponse({
     description: 'Successfully created.',
@@ -58,6 +58,7 @@ export class AuthorsController {
   }
 
   @Patch(':id')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Update author.' })
   @ApiOkResponse({
     description: 'Successfully updated.',
@@ -76,6 +77,7 @@ export class AuthorsController {
   }
 
   @Delete(':id')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Remove author.' })
   @ApiOkResponse({
     description: 'Successfully removed.',
