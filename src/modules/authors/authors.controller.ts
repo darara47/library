@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
@@ -7,7 +16,10 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { AuthorResponse } from '../../types/author.type';
+import {
+  AuthorResponse,
+  SearchQueryAuthorsResponse,
+} from '../../types/author.type';
 import { LoggedUser } from '../../types/loggedUser.type';
 import { UserRoles } from '../../types/userRoles.enum';
 import { CurrentUser, Public, Role } from '../../utiles/custom-decorators';
@@ -40,11 +52,11 @@ export class AuthorsController {
     return this.authorsService.create(createAuthorDto, loggedUser.id);
   }
 
-  @Post('search')
+  @Get('search')
   @ApiOperation({ summary: 'Search authors.' })
   @ApiOkResponse({
     description: 'Results returned.',
-    type: Array<AuthorResponse>,
+    type: SearchQueryAuthorsResponse,
   })
   @ApiResponse({
     status: '4XX',
@@ -52,8 +64,8 @@ export class AuthorsController {
   })
   @Public()
   search(
-    @Body() queryFindAuthorDto: QueryFindAuthorDto,
-  ): Promise<AuthorResponse[]> {
+    @Query() queryFindAuthorDto: QueryFindAuthorDto,
+  ): Promise<SearchQueryAuthorsResponse> {
     return this.authorsService.search(queryFindAuthorDto);
   }
 

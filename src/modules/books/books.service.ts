@@ -1,12 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { QueryRunnerSource } from '../../database/query-runner';
-import { BookResponse } from '../../types/book.type';
+import { BookResponse, SearchQueryBooksResponse } from '../../types/book.type';
 import { QueryRunner, Repository } from 'typeorm';
 import { Book } from './book.entity';
 import { CreateBookDto } from './dto/create-book.dto';
 import { QueryFindBookDto } from './dto/query-find-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
+import { getPagesResponse } from 'src/types/paginators';
 
 @Injectable()
 export class BooksService {
@@ -57,23 +58,28 @@ export class BooksService {
     }
   }
 
-  async search(queryFindBookDto: QueryFindBookDto) {
-    const { filters, paginators } = queryFindBookDto;
+  async search(
+    queryFindBookDto: QueryFindBookDto,
+  ): Promise<SearchQueryBooksResponse> {
+    const { genre, limit, orderBy, orderDirection, page, title } =
+      queryFindBookDto;
 
-    const results = await this.booksRepository
+    const [results, totalNumber] = await this.booksRepository
       .createQueryBuilder('books')
-      .where(`LOWER(books.title) LIKE LOWER(:title)`, {
-        title: `%${filters.title}%`,
+      .where(!!title && `LOWER(books.title) LIKE LOWER(:title)`, {
+        title: `%${title}%`,
       })
-      .andWhere(`LOWER(books.genre) LIKE LOWER(:genre)`, {
-        genre: `%${filters.genre}%`,
+      .andWhere(!!genre && `LOWER(books.genre) LIKE LOWER(:genre)`, {
+        genre: `%${genre}%`,
       })
-      .orderBy(`books.${paginators.order.byColumn}`, paginators.order.direction)
-      .offset(paginators.page.size * (paginators.page.index - 1))
-      .limit(paginators.page.size)
-      .getMany();
+      .orderBy(`books.${orderBy}`, orderDirection)
+      .offset(limit * (page - 1))
+      .limit(limit)
+      .getManyAndCount();
 
-    return this.mapBooks(results);
+    const pagesResponse = getPagesResponse(totalNumber, limit, page);
+
+    return { data: this.mapBooks(results), pages: pagesResponse };
   }
 
   async findOne(id: string): Promise<BookResponse> {

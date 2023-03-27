@@ -1,40 +1,33 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
-import {
-  IsBoolean,
-  IsObject,
-  IsOptional,
-  IsString,
-  ValidateNested,
-} from 'class-validator';
+import { Transform, Type } from 'class-transformer';
+import { IsBoolean, IsEnum, IsOptional, IsString } from 'class-validator';
+import { SearchQueryAuthorsOrderBy } from 'src/types/author.type';
 import { Paginators } from '../../../types/paginators';
 
-class Filters {
+export class QueryFindAuthorDto extends Paginators {
   @ApiProperty({
-    example: 'wi',
+    required: false,
+  })
+  @IsBoolean()
+  @IsOptional()
+  @Transform(({ value }) => value === 'true')
+  @Type(() => String)
+  isAlive: boolean;
+
+  @ApiProperty({
+    required: false,
   })
   @IsString()
   @IsOptional()
   name: string;
 
   @ApiProperty({
-    example: false,
+    default: SearchQueryAuthorsOrderBy.lastName,
+    enum: SearchQueryAuthorsOrderBy,
+    required: false,
   })
-  @IsBoolean()
+  @IsEnum(SearchQueryAuthorsOrderBy)
   @IsOptional()
-  isAlive: boolean;
-}
-
-export class QueryFindAuthorDto {
-  @ApiProperty()
-  @IsObject()
-  @ValidateNested()
-  @Type(() => Filters)
-  readonly filters: Filters;
-
-  @ApiProperty()
-  @IsObject()
-  @ValidateNested()
-  @Type(() => Paginators)
-  readonly paginators: Paginators;
+  readonly orderBy: SearchQueryAuthorsOrderBy =
+    SearchQueryAuthorsOrderBy.lastName;
 }

@@ -1,11 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AuthorResponse } from '../../types/author.type';
+import {
+  AuthorResponse,
+  SearchQueryAuthorsResponse,
+} from '../../types/author.type';
 import { Repository } from 'typeorm';
 import { Author } from './author.entity';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { QueryFindAuthorDto } from './dto/query-find-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
+import { getPagesResponse } from 'src/types/paginators';
 
 @Injectable()
 export class AuthorsService {
@@ -45,30 +49,33 @@ export class AuthorsService {
     return this.mapAuthor(author);
   }
 
-  async search(queryFindAuthorDto: QueryFindAuthorDto) {
-    const { filters, paginators } = queryFindAuthorDto;
+  async search(
+    queryFindAuthorDto: QueryFindAuthorDto,
+  ): Promise<SearchQueryAuthorsResponse> {
+    const { isAlive, limit, name, orderBy, orderDirection, page } =
+      queryFindAuthorDto;
 
-    const results = await this.authorsRepository
+    const [results, totalNumber] = await this.authorsRepository
       .createQueryBuilder('authors')
       .where(
-        `LOWER(CONCAT(authors.firstName, ' ', authors.lastName)) LIKE LOWER(:name)`,
+        !!name &&
+          `LOWER(CONCAT(authors.firstName, ' ', authors.lastName)) LIKE LOWER(:name)`,
         {
-          name: `%${filters.name}%`,
+          name: `%${name}%`,
         },
       )
       .andWhere(
-        filters.isAlive !== undefined &&
-          `authors.deathDate IS ${(!filters.isAlive && 'NOT') || ''} NULL`,
+        isAlive !== undefined &&
+          `authors.deathDate IS ${(!isAlive && 'NOT') || ''} NULL`,
       )
-      .orderBy(
-        `authors.${paginators.order.byColumn}`,
-        paginators.order.direction,
-      )
-      .offset(paginators.page.size * (paginators.page.index - 1))
-      .limit(paginators.page.size)
-      .getMany();
+      .orderBy(`authors.${orderBy}`, orderDirection)
+      .offset(limit * (page - 1))
+      .limit(limit)
+      .getManyAndCount();
 
-    return this.mapAuthors(results);
+    const pagesResponse = getPagesResponse(totalNumber, limit, page);
+
+    return { data: this.mapAuthors(results), pages: pagesResponse };
   }
 
   async findOne(id: string): Promise<AuthorResponse> {

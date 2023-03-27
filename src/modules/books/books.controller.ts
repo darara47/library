@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
@@ -7,7 +16,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { BookResponse } from '../../types/book.type';
+import { BookResponse, SearchQueryBooksResponse } from '../../types/book.type';
 import { UserRoles } from '../../types/userRoles.enum';
 import { Public, Role } from '../../utiles/custom-decorators';
 import { BooksService } from './books.service';
@@ -36,18 +45,20 @@ export class BooksController {
     return this.booksService.create(createBookDto);
   }
 
-  @Post('search')
+  @Get('search')
   @ApiOperation({ summary: 'Search books.' })
   @ApiOkResponse({
     description: 'Results returned.',
-    type: Array<BookResponse>,
+    type: SearchQueryBooksResponse,
   })
   @ApiResponse({
     status: '4XX',
     description: 'The error happened.',
   })
   @Public()
-  search(@Body() queryFindBookDto: QueryFindBookDto): Promise<BookResponse[]> {
+  search(
+    @Query() queryFindBookDto: QueryFindBookDto,
+  ): Promise<SearchQueryBooksResponse> {
     return this.booksService.search(queryFindBookDto);
   }
 
