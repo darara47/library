@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { QueryRunnerSource } from '../../database/transactions/query-runner';
+import { QueryRunnerSource } from '../../database/query-runner';
 import { BorrowedBookResponse } from '../../types/borrowed-book.type';
 import { IsNull, Repository } from 'typeorm';
 import { BooksService } from '../books/books.service';
@@ -19,7 +19,7 @@ export class BorrowedBooksService {
   async borrowBook(
     borrowBookDto: BorrowBookDto,
   ): Promise<BorrowedBookResponse> {
-    const queryRunner = await this.queryRunnerSource.create();
+    const queryRunner = await this.queryRunnerSource.createTransaction();
 
     try {
       const { bookId, userId } = borrowBookDto;
@@ -52,7 +52,7 @@ export class BorrowedBooksService {
   }
 
   async returnBook(id: string): Promise<BorrowedBookResponse> {
-    const queryRunner = await this.queryRunnerSource.create();
+    const queryRunner = await this.queryRunnerSource.createTransaction();
 
     try {
       const borrowedBook = await queryRunner.manager.preload(BorrowedBook, {

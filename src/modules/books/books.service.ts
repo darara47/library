@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { QueryRunnerSource } from '../../database/transactions/query-runner';
+import { QueryRunnerSource } from '../../database/query-runner';
 import { BookResponse } from '../../types/book.type';
 import { QueryRunner, Repository } from 'typeorm';
 import { Book } from './book.entity';
@@ -33,7 +33,7 @@ export class BooksService {
     continueQueryRunner?: QueryRunner,
   ): Promise<BookResponse> {
     const queryRunner =
-      continueQueryRunner || (await this.queryRunnerSource.create());
+      continueQueryRunner || (await this.queryRunnerSource.createTransaction());
 
     try {
       const book = await queryRunner.manager.preload(Book, {
