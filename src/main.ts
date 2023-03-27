@@ -15,7 +15,7 @@ async function bootstrap() {
   );
 
   const config = new DocumentBuilder()
-    .setTitle('App to management library')
+    .setTitle('App to manage library')
     .setDescription('All endpoints with example data')
     .setVersion('1.0')
     .addBearerAuth()
