@@ -1,29 +1,40 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { authorsMock } from 'src/mocks/authors.mock';
+import { authorsMock } from '../../../../mocks/authors.mock';
 import { Repository } from 'typeorm';
 import { Author } from '../../../../modules/authors/author.entity';
+import { QueryRunnerSource } from '../../../query-runner';
 
 @Injectable()
 export class AuthorsSeederService {
   constructor(
     @InjectRepository(Author)
     private readonly repository: Repository<Author>,
+    private readonly queryRunnerSource: QueryRunnerSource,
   ) {}
 
   async create() {
-    const addedAuthors = authorsMock.map(async (author) => {
-      const isAdded = await this.repository.findOneBy({
-        id: author.id,
-      });
+    const queryRunner = await this.queryRunnerSource.createTransaction();
 
-      if (isAdded) {
-        return Promise.resolve();
+    try {
+      for await (const author of authorsMock) {
+        const isAdded = await queryRunner.manager.findOneBy(Author, {
+          id: author.id,
+        });
+
+        if (!isAdded) {
+          await queryRunner.manager.save(
+            queryRunner.manager.create(Author, author),
+          );
+        }
       }
 
-      return await this.repository.save(this.repository.create(author));
-    });
-
-    return Promise.all(addedAuthors);
+      await queryRunner.commitTransaction();
+    } catch (err) {
+      await queryRunner.rollbackTransaction();
+      throw err;
+    } finally {
+      await queryRunner.release();
+    }
   }
 }

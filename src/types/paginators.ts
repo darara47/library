@@ -1,58 +1,62 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
-import {
-  IsEnum,
-  IsNumber,
-  IsPositive,
-  IsObject,
-  ValidateNested,
-  IsString,
-  IsNotEmpty,
-} from 'class-validator';
+import { IsEnum, IsNumber, IsPositive, IsOptional, Max } from 'class-validator';
 
-enum PageSizes {
-  small = 20,
-  medium = 30,
-  large = 50,
-}
-
-enum OrderDirection {
+export enum OrderDirection {
   ASC = 'ASC',
   DESC = 'DESC',
 }
 
-class Page {
-  @ApiProperty({ example: PageSizes.small })
-  @IsEnum(PageSizes)
-  readonly size: PageSizes;
-
-  @ApiProperty({ example: 1 })
-  @IsNumber()
-  @IsPositive()
-  readonly index: number;
-}
-
-class Order {
-  @ApiProperty({ example: OrderDirection.ASC })
-  @IsEnum(OrderDirection)
-  readonly direction: OrderDirection;
-
-  @ApiProperty({ example: 'lastName' })
-  @IsString()
-  @IsNotEmpty()
-  readonly byColumn: string;
-}
-
 export class Paginators {
+  @ApiProperty({
+    default: 10,
+    required: false,
+  })
+  @IsNumber({ maxDecimalPlaces: 0 })
+  @IsOptional()
+  @IsPositive()
+  @Max(1000)
+  readonly limit: number = 10;
+
+  @ApiProperty({
+    default: OrderDirection.ASC,
+    enum: OrderDirection,
+    required: false,
+  })
+  @IsEnum(OrderDirection)
+  @IsOptional()
+  readonly orderDirection: OrderDirection = OrderDirection.ASC;
+
+  @ApiProperty({ default: 1, required: false })
+  @IsNumber({ maxDecimalPlaces: 0 })
+  @IsOptional()
+  @IsPositive()
+  readonly page: number = 1;
+}
+
+export class PagesResponse {
   @ApiProperty()
-  @IsObject()
-  @ValidateNested()
-  @Type(() => Order)
-  readonly order: Order;
+  readonly current: number;
 
   @ApiProperty()
-  @IsObject()
-  @ValidateNested()
-  @Type(() => Page)
-  readonly page: Page;
+  readonly hasPrevious: boolean;
+
+  @ApiProperty()
+  readonly hasNext: boolean;
+
+  @ApiProperty()
+  readonly total: number;
 }
+
+export const getPagesResponse = (
+  dataLength: number,
+  limit: number,
+  page: number,
+): PagesResponse => {
+  const totalPages = Math.ceil(dataLength / limit);
+  return {
+    current: page,
+    hasNext: page < totalPages,
+    hasPrevious: page > 1,
+    total: totalPages,
+  };
+};

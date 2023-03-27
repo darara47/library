@@ -1,12 +1,11 @@
 import { Body, Controller, Param, Post, UseGuards } from '@nestjs/common';
 import {
-  ApiBearerAuth,
   ApiCreatedResponse,
   ApiOperation,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Public } from 'src/utiles/custom-decorators';
+import { Public } from '../../utiles/custom-decorators';
 import { AuthService } from './auth.service';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { RegisterAuthDto } from './dto/register-auth.dto';
@@ -15,14 +14,13 @@ import { ResetPasswordCodeAuthDto } from './dto/reset-password-code-auth.dto';
 import { SetPasswordAuthDto } from './dto/set-password-auth.dto';
 import { LocalAuthGuard } from './strategies/local-auth.guard';
 
-@ApiBearerAuth()
 @ApiTags('Auth')
 @Controller('auth')
+@Public()
 export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('register')
-  @Public()
   @ApiOperation({ summary: 'Create new user.' })
   @ApiCreatedResponse({
     description: 'Successfully created.',
@@ -36,7 +34,6 @@ export class AuthController {
   }
 
   @Post('activate/:activationToken')
-  @Public()
   @ApiOperation({ summary: 'Activate user account.' })
   @ApiCreatedResponse({
     description: 'Successfully activated.',
@@ -52,7 +49,6 @@ export class AuthController {
   }
 
   @Post('login')
-  @Public()
   @UseGuards(LocalAuthGuard)
   @ApiOperation({ summary: 'Login.' })
   @ApiCreatedResponse({
@@ -70,7 +66,6 @@ export class AuthController {
   }
 
   @Post('reset-password')
-  @Public()
   @ApiOperation({ summary: 'Reset password.' })
   @ApiCreatedResponse({
     description: 'Successfully password reset.',
@@ -85,7 +80,6 @@ export class AuthController {
     return this.authService.resetPassword(resetPasswordAuthDto);
   }
 
-  @Public()
   @Post('reset-password-code')
   @ApiOperation({ summary: 'Verify code to password reset.' })
   @ApiCreatedResponse({
@@ -101,7 +95,6 @@ export class AuthController {
     return this.authService.codeValidation(resetPasswordCodeAuthDto);
   }
 
-  @Public()
   @Post('set-password')
   @ApiOperation({ summary: 'Set new password.' })
   @ApiCreatedResponse({

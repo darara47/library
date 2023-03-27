@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
@@ -7,22 +16,25 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { AuthorResponse } from 'src/types/author.type';
-import { LoggedUser } from 'src/types/loggedUser.type';
-import { UserRoles } from 'src/types/userRoles.enum';
-import { CurrentUser, Public, Role } from 'src/utiles/custom-decorators';
+import {
+  AuthorResponse,
+  SearchQueryAuthorsResponse,
+} from '../../types/author.type';
+import { LoggedUser } from '../../types/loggedUser.type';
+import { UserRoles } from '../../types/userRoles.enum';
+import { CurrentUser, Public, Role } from '../../utiles/custom-decorators';
 import { AuthorsService } from './authors.service';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { QueryFindAuthorDto } from './dto/query-find-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
 
-@ApiBearerAuth()
 @ApiTags('Authors')
 @Controller('authors')
 export class AuthorsController {
   constructor(private authorsService: AuthorsService) {}
 
   @Post()
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Create new author.' })
   @ApiCreatedResponse({
     description: 'Successfully created.',
@@ -40,11 +52,11 @@ export class AuthorsController {
     return this.authorsService.create(createAuthorDto, loggedUser.id);
   }
 
-  @Post('search')
+  @Get('search')
   @ApiOperation({ summary: 'Search authors.' })
   @ApiOkResponse({
     description: 'Results returned.',
-    type: Array<AuthorResponse>,
+    type: SearchQueryAuthorsResponse,
   })
   @ApiResponse({
     status: '4XX',
@@ -52,12 +64,13 @@ export class AuthorsController {
   })
   @Public()
   search(
-    @Body() queryFindAuthorDto: QueryFindAuthorDto,
-  ): Promise<AuthorResponse[]> {
+    @Query() queryFindAuthorDto: QueryFindAuthorDto,
+  ): Promise<SearchQueryAuthorsResponse> {
     return this.authorsService.search(queryFindAuthorDto);
   }
 
   @Patch(':id')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Update author.' })
   @ApiOkResponse({
     description: 'Successfully updated.',
@@ -76,6 +89,7 @@ export class AuthorsController {
   }
 
   @Delete(':id')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Remove author.' })
   @ApiOkResponse({
     description: 'Successfully removed.',

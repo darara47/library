@@ -11,7 +11,7 @@ import {
   NOT_WHITESPACES_PATTERN,
   EMAIL_PATTERN,
   PASSWORD_PATTERN,
-} from 'src/utiles/patterns';
+} from '../../../utiles/patterns';
 
 class UpdateUserDtoProps {
   @ApiProperty({

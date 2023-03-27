@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Author } from 'src/modules/authors/author.entity';
+import { Author } from '../modules/authors/author.entity';
+import { PagesResponse } from './paginators';
 
 export class BookResponse {
   @ApiProperty()
@@ -22,4 +23,23 @@ export class BookResponse {
 
   @ApiProperty()
   availableCopies: number;
+}
+
+export enum SearchQueryBooksOrderBy {
+  genre = 'genre',
+  publicationDate = 'publicationDate',
+  title = 'title',
+}
+
+export class SearchQueryBooksResponse {
+  @ApiProperty({
+    isArray: true,
+    type: BookResponse,
+  })
+  data: BookResponse[];
+
+  @ApiProperty({
+    type: PagesResponse,
+  })
+  pages: PagesResponse;
 }

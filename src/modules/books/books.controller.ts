@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
@@ -7,21 +16,21 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { BookResponse } from 'src/types/book.type';
-import { UserRoles } from 'src/types/userRoles.enum';
-import { Role } from 'src/utiles/custom-decorators';
+import { BookResponse, SearchQueryBooksResponse } from '../../types/book.type';
+import { UserRoles } from '../../types/userRoles.enum';
+import { Public, Role } from '../../utiles/custom-decorators';
 import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { QueryFindBookDto } from './dto/query-find-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 
-@ApiBearerAuth()
 @ApiTags('Books')
 @Controller('books')
 export class BooksController {
   constructor(private booksService: BooksService) {}
 
   @Post()
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Create new book.' })
   @ApiCreatedResponse({
     description: 'Successfully created.',
@@ -36,21 +45,25 @@ export class BooksController {
     return this.booksService.create(createBookDto);
   }
 
-  @Post('search')
+  @Get('search')
   @ApiOperation({ summary: 'Search books.' })
   @ApiOkResponse({
     description: 'Results returned.',
-    type: Array<BookResponse>,
+    type: SearchQueryBooksResponse,
   })
   @ApiResponse({
     status: '4XX',
     description: 'The error happened.',
   })
-  search(@Body() queryFindBookDto: QueryFindBookDto): Promise<BookResponse[]> {
+  @Public()
+  search(
+    @Query() queryFindBookDto: QueryFindBookDto,
+  ): Promise<SearchQueryBooksResponse> {
     return this.booksService.search(queryFindBookDto);
   }
 
   @Patch(':id')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Update book.' })
   @ApiOkResponse({
     description: 'Successfully updated.',
@@ -69,6 +82,7 @@ export class BooksController {
   }
 
   @Delete(':id')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Remove book.' })
   @ApiOkResponse({
     description: 'Successfully removed.',

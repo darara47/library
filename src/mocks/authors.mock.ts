@@ -1,4 +1,4 @@
-import { Author } from 'src/modules/authors/author.entity';
+import { Author } from '../modules/authors/author.entity';
 
 export const authorsMock: Author[] = [
   {

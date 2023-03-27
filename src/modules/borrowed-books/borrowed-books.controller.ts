@@ -7,9 +7,9 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { BorrowedBookResponse } from 'src/types/borrowed-book.type';
-import { UserRoles } from 'src/types/userRoles.enum';
-import { Role } from 'src/utiles/custom-decorators';
+import { BorrowedBookResponse } from '../../types/borrowed-book.type';
+import { UserRoles } from '../../types/userRoles.enum';
+import { Role } from '../../utiles/custom-decorators';
 import { BorrowedBooksService } from './borrowed-books.service';
 import { BorrowBookDto } from './dto/borrow-book.dto';
 

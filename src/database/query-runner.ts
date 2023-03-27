@@ -5,7 +5,7 @@ import { DataSource, QueryRunner } from 'typeorm';
 export class QueryRunnerSource {
   constructor(private dataSource: DataSource) {}
 
-  async create(): Promise<QueryRunner> {
+  async createTransaction(): Promise<QueryRunner> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();

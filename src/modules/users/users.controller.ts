@@ -9,8 +9,8 @@ import {
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
 import { UserResponse } from '../../types/user.type';
-import { CurrentUser } from 'src/utiles/custom-decorators';
-import { LoggedUser } from 'src/types/loggedUser.type';
+import { CurrentUser } from '../../utiles/custom-decorators';
+import { LoggedUser } from '../../types/loggedUser.type';
 
 @ApiBearerAuth()
 @ApiTags('Users')
@@ -19,7 +19,7 @@ export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Update logged user.' })
+  @ApiOperation({ summary: 'Get logged user.' })
   @ApiOkResponse({
     description: 'Results returned.',
     type: UserResponse,

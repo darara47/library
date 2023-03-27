@@ -1,35 +1,25 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
-import {
-  IsObject,
-  IsOptional,
-  IsString,
-  ValidateNested,
-} from 'class-validator';
-import { Paginators } from 'src/types/paginators';
+import { IsEnum, IsOptional, IsString } from 'class-validator';
+import { SearchQueryBooksOrderBy } from 'src/types/book.type';
+import { Paginators } from '../../../types/paginators';
 
-class Filters {
-  @ApiProperty({ example: 'Bambo' })
-  @IsString()
-  @IsOptional()
-  title: string;
-
-  @ApiProperty({ example: 'wiersz' })
+export class QueryFindBookDto extends Paginators {
+  @ApiProperty({ required: false })
   @IsString()
   @IsOptional()
   genre: string;
-}
 
-export class QueryFindBookDto {
-  @ApiProperty()
-  @IsObject()
-  @ValidateNested()
-  @Type(() => Filters)
-  readonly filters: Filters;
+  @ApiProperty({
+    default: SearchQueryBooksOrderBy.title,
+    enum: SearchQueryBooksOrderBy,
+    required: false,
+  })
+  @IsEnum(SearchQueryBooksOrderBy)
+  @IsOptional()
+  readonly orderBy: SearchQueryBooksOrderBy = SearchQueryBooksOrderBy.title;
 
-  @ApiProperty()
-  @IsObject()
-  @ValidateNested()
-  @Type(() => Paginators)
-  readonly paginators: Paginators;
+  @ApiProperty({ required: false })
+  @IsString()
+  @IsOptional()
+  title: string;
 }
