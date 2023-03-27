@@ -1,6 +1,6 @@
-## Description
+# Library - back-end
 
-Application to management library.
+Application to manage library.
 
 ## Installation
 
@@ -16,13 +16,6 @@ $ npm run start
 
 # watch mode
 $ npm run start:dev
-```
-
-## Test
-
-```bash
-# unit tests
-$ npm run test:watch
 ```
 
 ## Database
